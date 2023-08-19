@@ -4,6 +4,9 @@ const express = require('express')
 const app = express()
 const PORT = 4000
 
+
+const nodemailer = require('nodemailer');
+
 // Generate a salt for hashing
 var mysql = require("mysql");
 
