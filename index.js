@@ -4,14 +4,8 @@ const express = require('express')
 const app = express()
 const PORT = 4000
 
-
-const nodemailer = require('nodemailer');
-const bcrypt = require("bcrypt");
-
 // Generate a salt for hashing
-const salt = bcrypt.genSaltSync(10);
 var mysql = require("mysql");
-var multer = require("multer"); // Import Multer
 
 var bodyParser = require("body-parser");
 var cors = require("cors");
