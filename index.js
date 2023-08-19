@@ -6,8 +6,10 @@ const PORT = 4000
 
 
 const nodemailer = require('nodemailer');
+const bcrypt = require("bcrypt");
 
 // Generate a salt for hashing
+const salt = bcrypt.genSaltSync(10);
 var mysql = require("mysql");
 
 var bodyParser = require("body-parser");
