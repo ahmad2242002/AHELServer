@@ -19,6 +19,7 @@ app.use(bodyParser.json());
 
 app.set("view engine", "ejs");
 
+
 var conn = mysql.createConnection({
   host: "sql6.freesqldatabase.com",
   user: "sql6640919",
@@ -31,6 +32,11 @@ conn.connect(function (err) {
   console.log("Connection Sucessful");
 });
 
+
+
+app.get('/', (req, res) => {
+  res.send('Hey this is my API running 🥳')
+})
 
 
 var storage = multer.diskStorage({
@@ -342,3 +348,5 @@ function sendOTP() {
 var server = app.listen(4000, function () {
   console.log("App running on port 4000 s");
 });
+
+module.exports = app
