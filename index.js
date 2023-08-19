@@ -9,15 +9,14 @@ const nodemailer = require('nodemailer');
 const bcrypt = require("bcrypt");
 
 // Generate a salt for hashing
-const salt = bcrypt.genSaltSync(10);
 var mysql = require("mysql");
 var multer = require("multer"); // Import Multer
 
 var bodyParser = require("body-parser");
-/*var cors = require("cors");
+var cors = require("cors");
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());*/
+app.use(bodyParser.json());
 
 
 var conn = mysql.createConnection({
@@ -32,7 +31,7 @@ conn.connect(function (err) {
   console.log("Connection Sucessful");
 });
 
-/*
+
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -61,6 +60,7 @@ app.post("/insert", upload.single("image"), function (req, res) {
   var domain = req.body.domain;
   var companyname = req.body.companyname;
   var image = req.file.filename;
+  const salt = bcrypt.genSaltSync(10);
   const phash = bcrypt.hashSync(password, salt);
   if (bcrypt.compareSync(cpassword, phash)) {
     var sql = `insert into users(firstname, lastname, email, password, phone, latitude, longitude, domain,companyname,image) values('${firstname}', '${lastname}', '${email}', '${phash}', '${phoneno}', '${latitude}', '${longitude}', '${domain}','${companyname}','${image}')`;
@@ -338,7 +338,7 @@ function sendOTP() {
       console.log('Email sent: ' + info.response);
     }
   });
-}*/
+}
 app.listen(PORT, () => {
   console.log(`API listening on PORT ${PORT} `)
 })
