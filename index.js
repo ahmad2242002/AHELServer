@@ -4,8 +4,11 @@ const express = require('express')
 const app = express()
 const PORT = 4000
 
+// Generate a salt for hashing
 
 var bodyParser = require("body-parser");
+var cors = require("cors");
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
