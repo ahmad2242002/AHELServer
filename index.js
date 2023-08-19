@@ -6,10 +6,10 @@ const PORT = 4000
 
 
 const nodemailer = require('nodemailer');
-const bcrypt = require("bcrypt");
+var bcrypt = require('bcryptjs');
 
 // Generate a salt for hashing
-
+const salt = bcrypt.genSaltSync(10);
 var mysql = require("mysql");
 var multer = require("multer"); // Import Multer
 
@@ -33,7 +33,7 @@ conn.connect(function (err) {
 });
 
 
-/*
+
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "uploads"); // Directory where uploaded files will be stored
@@ -338,7 +338,7 @@ function sendOTP() {
       console.log('Email sent: ' + info.response);
     }
   });
-}*/
+}
 app.listen(PORT, () => {
   console.log(`API listening on PORT ${PORT} `)
 })
