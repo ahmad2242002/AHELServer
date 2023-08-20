@@ -11,8 +11,6 @@ var bcrypt = require('bcryptjs');
 // Generate a salt for hashing
 const salt = bcrypt.genSaltSync(10);
 var mysql = require("mysql");
-var multer = require("multer"); // Import Multer
-const path = require('path');
 var bodyParser = require("body-parser");
 var cors = require("cors");
 app.use(cors());
@@ -34,33 +32,13 @@ conn.connect(function (err) {
 
 
 
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads"); // Directory where uploaded files will be stored
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + "-" + file.originalname); // Set the file name
-  },
-});
 
-var upload = multer({ storage: storage });
 
 
 
 var recipt;
 
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads"); // Directory where uploaded files will be stored
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + "-" + file.originalname); // Set the file name
-  },
-});
 
-var upload = multer({ storage: storage });
-
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 var recipt;
 
@@ -97,7 +75,7 @@ app.post("/insert", function (req, res) {
 });
 
 
-app.post("/insertproject", upload.single("image"), function (req, res) {
+app.post("/insertproject", function (req, res) {
   var resu;
   var fid;
   var pname = req.body.pname;
@@ -112,7 +90,7 @@ app.post("/insertproject", upload.single("image"), function (req, res) {
   var phasedes = req.body.phasedes;
   var phasebudget = req.body.phasebudget;
   var phasedate = req.body.phasedate;
-  var image = req.file.filename;
+  var image = req.body.image;
   var totalphases = req.body.totalphases;
   var noofplot = req.body.noofplot;
   phasename = phasename.split(",");
@@ -225,13 +203,13 @@ app.get("/getallprojectorder", function(req,res){
   });
 });
 
-app.post("/updateproject", upload.single("image"), function (req, res) {
+app.post("/updateproject",function (req, res) {
   var result;
   var id = req.body.id;
   var pname = req.body.pname;
   var pdescription = req.body.pdescription;
   var pmanager = req.body.pmanager;
-  var image = req.file.filename;
+  var image = req.body.image;
   var pstatus = req.body.pstatus;
   var budget = req.body.budget;
   var phasedata = req.body.phasedata;
