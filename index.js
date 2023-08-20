@@ -64,7 +64,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 var recipt;
 
-app.post("/insert", upload.single("image"), function (req, res) {
+app.post("/insert", function (req, res) {
   var firstname = req.body.firstname;
   var lastname = req.body.lastname;
   var email = req.body.email;
@@ -75,7 +75,7 @@ app.post("/insert", upload.single("image"), function (req, res) {
   var longitude = req.body.longitude;
   var domain = req.body.domain;
   var companyname = req.body.companyname;
-  var image = req.file.filename;
+  var image = req.body.image;
   const phash = bcrypt.hashSync(password, salt);
   if (bcrypt.compareSync(cpassword, phash)) {
     var sql = `insert into users(firstname, lastname, email, password, phone, latitude, longitude, domain,companyname,image) values('${firstname}', '${lastname}', '${email}', '${phash}', '${phoneno}', '${latitude}', '${longitude}', '${domain}','${companyname}','${image}')`;
