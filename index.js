@@ -12,7 +12,7 @@ var bcrypt = require('bcryptjs');
 const salt = bcrypt.genSaltSync(10);
 var mysql = require("mysql");
 var multer = require("multer"); // Import Multer
-
+const path = require('path');
 var bodyParser = require("body-parser");
 var cors = require("cors");
 app.use(cors());
@@ -46,6 +46,21 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage });
 
 
+
+var recipt;
+
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads"); // Directory where uploaded files will be stored
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname); // Set the file name
+  },
+});
+
+var upload = multer({ storage: storage });
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 var recipt;
 
@@ -194,7 +209,7 @@ app.post("/getprojectupdate", function (req, res) {
 app.post("/getindividualproject", function(req,res){
   console.log("hello");
   var id = req.body.id;
-  var sql = `Select id,pname,pdescription,image,plots,bookedplots from projects where id = ${id}`;
+  var sql = `Select id,pname,pdescription,image,plots,bookedplots,budget,location from projects where id = ${id}`;
   conn.query(sql, function (err, results) {
     if (err) throw err;
     res.send(results);
@@ -293,6 +308,67 @@ app.post("/bookplot",function(req,res){
   });
 });
 
+app.get("/showallorders",function (req, res) {
+  var sql = `(SELECT (SELECT Concat(firstname," ",lastname) FROM users where id = po.uid)  as uname, (SELECT pname  FROM projects where id = po.pid) as pname,(SELECT location  FROM projects where id = po.pid) as location, status from porder po)`
+  conn.query(sql, function (err, results) {
+    res.send(results);
+  });
+});
+
+app.get("/showpendingorders",function (req, res) {
+  var sql = `(SELECT id,(SELECT Concat(firstname," ",lastname) FROM users where id = po.uid)  as uname, (SELECT pname  FROM projects where id = po.pid) as pname,(SELECT location  FROM projects where id = po.pid) as location, status from porder po where status = "inprogress");`
+  conn.query(sql, function (err, results) {
+    res.send(results);
+  });
+});
+
+app.post("/updateOrderList",function (req, res) {
+ var id = req.body.id;
+ var status = req.body.status;
+var sql = `Update porder set status = '${status}' where id = '${id}'`;
+ conn.query(sql, function (err, results) {
+    res.send(results);
+  });
+});
+
+
+app.get("/dashboarddata1",function (req, res) {
+ var sql = `Select p.pname,p.pmanager,p.plots from projects p`;
+  conn.query(sql, function (err, results) {
+  res.send(results);
+  });
+});
+
+app.get("/dashboarddata2",function (req, res) {
+  var sql2 = `Select count(*) as projects from projects`;
+
+   conn.query(sql2, function (err, results) {
+     
+   res.send(results);
+   });
+ });
+
+ app.get("/dashboarddata4",function (req, res) {
+  var sql4 = `Select sum(plots) as plots from projects`;
+   conn.query(sql4, function (err, results) {
+   res.send(results);
+   });
+ });
+
+ app.get("/dashboarddata3",function (req, res) {
+  var sql4 = `Select count(*) as users from users`;
+   conn.query(sql4, function (err, results) {
+   res.send(results);
+   });
+ });
+
+ app.get("/dashboarddata5",function (req, res) {
+  var sql4 = `Select count(*) as orders from porder`;
+   conn.query(sql4, function (err, results) {
+   res.send(results);
+   });
+ });
+
 app.post("/getdata", function (req, res) {
   var id = req.body.id;
   var sql = `Select * from users where id = '${id}'`;
@@ -314,8 +390,8 @@ function sendOTP() {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: 'az106725@gmail.com',
-      pass: 'xmsocssezltewatm'
+      user: 'materio.ar@gmail.com',
+      pass: 'xwrabjsaxaxxabpn'
     }
 
   });
@@ -324,7 +400,7 @@ function sendOTP() {
 
   // Define the email content
   const mailOptions = {
-    from: 'az106725@gmail.com',
+    from: 'materio.ar@gmail.com',
     to: `${recipt}`,
     subject: 'OTP Code',
     text: `Your OTP code is: ${otpCode}`
@@ -339,6 +415,7 @@ function sendOTP() {
     }
   });
 }
+
 app.listen(PORT, () => {
   console.log(`API listening on PORT ${PORT} `)
 })
