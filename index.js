@@ -20,9 +20,9 @@ app.use(bodyParser.json());
 
 var conn = mysql.createConnection({
   host: "sql6.freesqldatabase.com",
-  user: "sql6640919",
-  password: "Enxh8WESKP",
-  database: "sql6640919",
+  user: "sql6699563",
+  password: "w36ICvLB9v",
+  database: "sql6699563",
 });
 
 conn.connect(function (err) {
